@@ -40,9 +40,9 @@ export function GeneratedDrillsPage() {
   return (
     <section className="page page--stack">
       <div className="page__intro">
-        <p className="eyebrow">Generated drills</p>
-        <h2>Future practice from your mistakes</h2>
-        <p>
+        <p className="eyebrow type-label">Generated drills</p>
+        <h2 className="type-heading-lg">Future practice from your mistakes</h2>
+        <p className="type-body-muted">
           These read-only English and Hebrew drills were generated automatically
           from mistake patterns the reviewer identified during practice.
         </p>
@@ -63,12 +63,12 @@ export function GeneratedDrillsPage() {
         <section className="surface-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Entries</p>
-              <h3>{filteredDrills.length} generated drills</h3>
+              <p className="eyebrow type-label">Entries</p>
+              <h3 className="type-heading-md">{filteredDrills.length} generated drills</h3>
             </div>
           </div>
           {filteredDrills.length === 0 ? (
-            <p className="empty-state">No generated drills match the current search.</p>
+            <p className="empty-state type-body-muted">No generated drills match the current search.</p>
           ) : (
             <div className="candidate-list">
               {filteredDrills.map((drill) => (
@@ -89,7 +89,7 @@ export function GeneratedDrillsPage() {
                   <p className="mistake-snippet" dir="auto">
                     {drill.englishPrompt ?? "Generated practice prompt"}
                   </p>
-                  <p className="mistake-snippet mistake-snippet--strong" dir="rtl">
+                  <p className="mistake-snippet type-hebrew-body type-hebrew-body-snippet" dir="rtl">
                     {drill.primaryTranslation ?? drill.correctedText}
                   </p>
                 </button>
@@ -101,51 +101,51 @@ export function GeneratedDrillsPage() {
         <section className="surface-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Detail</p>
-              <h3>Drill detail</h3>
+              <p className="eyebrow type-label">Detail</p>
+              <h3 className="type-heading-md">Drill detail</h3>
             </div>
           </div>
           {selectedDrill ? (
             <dl className="detail-grid">
               <div>
-                <dt>English prompt</dt>
+                <dt className="type-label-meta">English prompt</dt>
                 <dd dir="auto">{selectedDrill.englishPrompt ?? "Not captured"}</dd>
               </div>
               <div>
-                <dt>Primary translation</dt>
-                <dd dir="rtl">
+                <dt className="type-label-meta">Primary translation</dt>
+                <dd className="type-hebrew-body" dir="rtl">
                   {selectedDrill.primaryTranslation ?? selectedDrill.correctedText}
                 </dd>
               </div>
               <div>
-                <dt>Acceptable variants</dt>
-                <dd dir="rtl">
+                <dt className="type-label-meta">Acceptable variants</dt>
+                <dd className="type-hebrew-body" dir="rtl">
                   {(selectedDrill.acceptableTranslations ?? [selectedDrill.correctedText]).join(
                     " / ",
                   )}
                 </dd>
               </div>
               <div>
-                <dt>From issue</dt>
+                <dt className="type-label-meta">From issue</dt>
                 <dd>{selectedDrill.tags.join(", ")}</dd>
               </div>
               <div>
-                <dt>You wrote</dt>
-                <dd dir="rtl">{selectedDrill.derivedFrom?.actualFragment ?? "Not captured"}</dd>
+                <dt className="type-label-meta">You wrote</dt>
+                <dd className="type-hebrew-body" dir="rtl">{selectedDrill.derivedFrom?.actualFragment ?? "Not captured"}</dd>
               </div>
               <div>
-                <dt>Target construction</dt>
-                <dd dir="rtl">
+                <dt className="type-label-meta">Target construction</dt>
+                <dd className="type-hebrew-body" dir="rtl">
                   {selectedDrill.derivedFrom?.expectedFragment ?? "Not captured"}
                 </dd>
               </div>
               <div>
-                <dt>Rule note</dt>
+                <dt className="type-label-meta">Rule note</dt>
                 <dd>{selectedDrill.ruleNote ?? "No note yet"}</dd>
               </div>
             </dl>
           ) : (
-            <p className="empty-state">
+            <p className="empty-state type-body-muted">
               Select a generated drill to inspect its prompt, Hebrew reference, and source construction.
             </p>
           )}

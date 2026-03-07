@@ -120,14 +120,14 @@ export function HighlightedAnswer({
 
   if (effectiveIssues.length === 0) {
     return (
-      <p className="hebrew-text hebrew-text--feedback teaching-panel__hebrew" dir="rtl">
+      <p className="hebrew-text hebrew-text--feedback teaching-panel__hebrew type-hebrew-training" dir="rtl">
         {answer}
       </p>
     );
   }
 
   return (
-    <p className="hebrew-text hebrew-text--feedback teaching-panel__hebrew" dir="rtl">
+    <p className="hebrew-text hebrew-text--feedback teaching-panel__hebrew type-hebrew-training" dir="rtl">
       {renderHighlightedText(answer, effectiveIssues, "actualFragment", "teaching-highlight")}
     </p>
   );
@@ -141,7 +141,7 @@ export function HighlightedFeedback({
 
   if (fragments.length === 0) {
     return (
-      <p className="hebrew-text hebrew-text--feedback" dir="rtl">
+      <p className="hebrew-text hebrew-text--feedback type-hebrew-training" dir="rtl">
         {correctedAnswer}
       </p>
     );
@@ -149,7 +149,7 @@ export function HighlightedFeedback({
 
   return (
     <div className="feedback-annotation-group">
-      <p className="hebrew-text hebrew-text--feedback" dir="rtl">
+      <p className="hebrew-text hebrew-text--feedback type-hebrew-training" dir="rtl">
         {renderHighlightedText(correctedAnswer, issues, "expectedFragment", "feedback-highlight")}
       </p>
       <div className="feedback-issue-list">

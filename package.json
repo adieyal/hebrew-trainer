@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "lint:styles": "stylelint \"src/styles.css\" && node scripts/check-typography-selectors.mjs && node scripts/check-no-inline-styles.mjs && node scripts/check-no-hardcoded-colors.mjs && node scripts/check-no-literal-radius.mjs && node scripts/check-no-literal-borders.mjs && node scripts/check-no-literal-spacing.mjs",
     "preview": "vite preview",
     "test": "vitest"
   },
@@ -25,6 +26,8 @@
     "@vitejs/plugin-react": "^4.3.4",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^26.0.0",
+    "stylelint": "^17.4.0",
+    "stylelint-config-standard": "^40.0.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.2",
     "vitest": "^3.0.8"

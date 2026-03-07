@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, test } from "vitest";
 import { resetTrainerDb } from "../../../storage/db";
@@ -7,6 +7,7 @@ import { settingsRepository } from "../../../storage/repositories/settings-repos
 import { SettingsPage } from "./SettingsPage";
 
 afterEach(async () => {
+  document.documentElement.style.removeProperty("--font-hebrew-training");
   await resetTrainerDb();
 });
 
@@ -45,6 +46,19 @@ describe("SettingsPage", () => {
 
     const settings = await settingsRepository.get();
     expect(settings?.typography.practiceFontPreset).toBe("adelle_sans");
+  });
+
+  test("updates the practice font preview variable", async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+
+    await user.selectOptions(await screen.findByLabelText(/practice font/i), "adelle_sans");
+
+    await waitFor(() => {
+      expect(document.documentElement.style.getPropertyValue("--font-hebrew-training")).toContain(
+        '"Adelle Sans"',
+      );
+    });
   });
 
   test("resets progress without deleting stored entries", async () => {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { MasteryBand, MistakeEntry } from "../../../domain/models/mistake";
 import { isDue } from "../../../domain/utils/dates";
+import { containsHebrewScript } from "../../../domain/utils/hebrew-normalize";
 import { mistakeRepository } from "../../../storage/repositories/mistake-repository";
 
 export function MistakeBankPage() {
@@ -50,9 +51,9 @@ export function MistakeBankPage() {
   return (
     <section className="page page--stack">
       <div className="page__intro">
-        <p className="eyebrow">Mistake Bank</p>
-        <h2>Inspect your translation patterns</h2>
-        <p>
+        <p className="eyebrow type-label">Mistake Bank</p>
+        <h2 className="type-heading-lg">Inspect your translation patterns</h2>
+        <p className="type-body-muted">
           Filter by mastery, due status, and relapses to see which English
           prompts and Hebrew patterns still need active review.
         </p>
@@ -100,12 +101,12 @@ export function MistakeBankPage() {
         <section className="surface-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Entries</p>
-              <h3>{filteredMistakes.length} matching mistakes</h3>
+              <p className="eyebrow type-label">Entries</p>
+              <h3 className="type-heading-md">{filteredMistakes.length} matching mistakes</h3>
             </div>
           </div>
           {filteredMistakes.length === 0 ? (
-            <p className="empty-state">No mistakes match the current filters.</p>
+            <p className="empty-state type-body-muted">No mistakes match the current filters.</p>
           ) : (
             <div className="candidate-list">
               {filteredMistakes.map((mistake) => (
@@ -126,7 +127,7 @@ export function MistakeBankPage() {
                   <p className="mistake-snippet" dir="auto">
                     {mistake.englishPrompt ?? mistake.sourceText ?? "Generated prompt"}
                   </p>
-                  <p className="mistake-snippet mistake-snippet--strong" dir="rtl">
+                  <p className="mistake-snippet type-hebrew-body type-hebrew-body-snippet" dir="rtl">
                     {mistake.primaryTranslation ?? mistake.correctedText}
                   </p>
                 </button>
@@ -138,40 +139,44 @@ export function MistakeBankPage() {
         <section className="surface-card">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Detail</p>
-              <h3>Translation detail</h3>
+              <p className="eyebrow type-label">Detail</p>
+              <h3 className="type-heading-md">Translation detail</h3>
             </div>
           </div>
           {selectedMistake ? (
             <dl className="detail-grid">
               <div>
-                <dt>English prompt</dt>
+                <dt className="type-label-meta">English prompt</dt>
                 <dd dir="auto">{selectedMistake.englishPrompt ?? "Not captured"}</dd>
               </div>
               <div>
-                <dt>Primary translation</dt>
-                <dd dir="rtl">{selectedMistake.primaryTranslation ?? selectedMistake.correctedText}</dd>
+                <dt className="type-label-meta">Primary translation</dt>
+                <dd className="type-hebrew-body" dir="rtl">
+                  {selectedMistake.primaryTranslation ?? selectedMistake.correctedText}
+                </dd>
               </div>
               <div>
-                <dt>Acceptable variants</dt>
-                <dd dir="rtl">
+                <dt className="type-label-meta">Acceptable variants</dt>
+                <dd className="type-hebrew-body" dir="rtl">
                   {(selectedMistake.acceptableTranslations ?? [selectedMistake.correctedText]).join(" / ")}
                 </dd>
               </div>
               <div>
-                <dt>Tags</dt>
+                <dt className="type-label-meta">Tags</dt>
                 <dd>{selectedMistake.tags.join(", ")}</dd>
               </div>
               <div>
-                <dt>Rule note</dt>
-                <dd>{selectedMistake.ruleNote ?? "No note yet"}</dd>
+                <dt className="type-label-meta">Rule note</dt>
+                <dd className={containsHebrewScript(selectedMistake.ruleNote ?? "") ? "type-hebrew-body" : undefined}>
+                  {selectedMistake.ruleNote ?? "No note yet"}
+                </dd>
               </div>
               <div>
-                <dt>Attempts</dt>
+                <dt className="type-label-meta">Attempts</dt>
                 <dd>{selectedMistake.stats.attempts}</dd>
               </div>
               <div>
-                <dt>Next review</dt>
+                <dt className="type-label-meta">Next review</dt>
                 <dd>
                   {selectedMistake.stats.nextReviewAt
                     ? new Date(selectedMistake.stats.nextReviewAt).toLocaleString()
@@ -180,7 +185,7 @@ export function MistakeBankPage() {
               </div>
             </dl>
           ) : (
-            <p className="empty-state">
+            <p className="empty-state type-body-muted">
               Select an entry to inspect the English prompt, Hebrew reference, and review history.
             </p>
           )}

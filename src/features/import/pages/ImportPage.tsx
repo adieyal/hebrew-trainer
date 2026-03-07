@@ -107,16 +107,16 @@ export function ImportPage() {
   return (
     <section className="page page--grid">
       <div className="page__intro">
-        <p className="eyebrow">Import</p>
-        <h2>Bring in English prompts for translation practice</h2>
-        <p>
+        <p className="eyebrow type-label">Import</p>
+        <h2 className="type-heading-lg">Bring in English prompts for translation practice</h2>
+        <p className="type-body-muted">
           Paste English sentences, review the prompts you want to keep, and let
           the app generate Hebrew reference answers when you save.
         </p>
       </div>
 
       <div className="surface-card">
-        <label className="field-label" htmlFor="import-raw-text">
+        <label className="field-label type-label-field" htmlFor="import-raw-text">
           English prompts
         </label>
         <textarea
@@ -131,15 +131,15 @@ export function ImportPage() {
           <button className="button" onClick={handleParse} type="button">
             Parse prompts
           </button>
-          <span className="status-text">{status}</span>
+          <span className="status-text type-body-muted">{status}</span>
         </div>
       </div>
 
       <div className="surface-card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Candidates</p>
-            <h3>Review prompts before saving</h3>
+            <p className="eyebrow type-label">Candidates</p>
+            <h3 className="type-heading-md">Review prompts before saving</h3>
           </div>
           <button
             className="button button--secondary"
@@ -152,7 +152,7 @@ export function ImportPage() {
         </div>
 
         {candidates.length === 0 ? (
-          <p className="empty-state">
+          <p className="empty-state type-body-muted">
             Parsed English prompts will appear here before Hebrew references are generated.
           </p>
         ) : (
@@ -171,7 +171,7 @@ export function ImportPage() {
                       : `Confidence ${Math.round(candidate.confidence * 100)}%`}
                   </span>
                 </div>
-                <label className="field-label" htmlFor={`candidate-source-${candidate.id}`}>
+                <label className="field-label type-label-field" htmlFor={`candidate-source-${candidate.id}`}>
                   English prompt
                 </label>
                 <textarea
@@ -186,18 +186,18 @@ export function ImportPage() {
                 />
                 {promptOnly ? (
                   <div className="import-candidate-preview">
-                    <p className="field-label">Hebrew reference</p>
-                    <p className="import-candidate-preview__copy">
+                    <p className="field-label type-label-field">Hebrew reference</p>
+                    <p className="import-candidate-preview__copy type-body-muted">
                       A Hebrew reference answer will be generated automatically when you save this prompt.
                     </p>
                   </div>
                 ) : (
                   <>
-                    <label className="field-label" htmlFor={`candidate-corrected-${candidate.id}`}>
+                    <label className="field-label type-label-field" htmlFor={`candidate-corrected-${candidate.id}`}>
                       Hebrew reference
                     </label>
                     <textarea
-                      className="text-input text-input--compact"
+                      className="text-input text-input--compact type-hebrew-body"
                       dir="rtl"
                       id={`candidate-corrected-${candidate.id}`}
                       onChange={(event) =>
@@ -209,7 +209,7 @@ export function ImportPage() {
                   </>
                 )}
                 <div className="candidate-card__footer">
-                  <span className="muted-text">
+                  <span className="muted-text type-body-muted">
                     {promptOnly
                       ? "The English prompt looks ready for Hebrew generation."
                       : candidate.tags.join(", ")}

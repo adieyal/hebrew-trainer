@@ -10,7 +10,10 @@ import { createMistakeEntryFromGeneratedPracticeItem } from "../../../domain/ser
 import { createDefaultSettings } from "../../../domain/services/settings-service";
 import { applyAttemptToMistake } from "../../../domain/services/spaced-repetition-service";
 import { createOpenAiCompatibleClient } from "../../../llm/openai-client";
-import { normalizeHebrewText } from "../../../domain/utils/hebrew-normalize";
+import {
+  containsHebrewScript,
+  normalizeHebrewText,
+} from "../../../domain/utils/hebrew-normalize";
 import { createId } from "../../../domain/utils/ids";
 import { attemptRepository } from "../../../storage/repositories/attempt-repository";
 import { mistakeRepository } from "../../../storage/repositories/mistake-repository";
@@ -100,6 +103,10 @@ export function PracticePage() {
   }, []);
 
   const currentExercise = session ? exercises[session.currentIndex] : undefined;
+  const promptCopy = currentExercise?.presentedText ?? currentExercise?.prompt ?? "";
+  const promptClassName = containsHebrewScript(promptCopy)
+    ? "practice-prompt__text type-hebrew-training-lg"
+    : "practice-prompt__text type-heading-lg";
   const completedCount = useMemo(() => {
     if (!session) {
       return 0;
@@ -275,28 +282,28 @@ export function PracticePage() {
   return (
     <section className="practice-page">
       <header className="practice-session-header">
-        <p className="eyebrow">Practice</p>
-        <h2 className="practice-session-header__title">Focused writing session</h2>
-        <p className="practice-session-header__meta">
+        <p className="eyebrow type-label">Practice</p>
+        <h2 className="practice-session-header__title type-heading-lg">Focused writing session</h2>
+        <p className="practice-session-header__meta type-body-muted">
           {session ? `${session.currentIndex + 1} of ${exercises.length} today` : "0 of 0 today"}
           <span aria-hidden="true"> · </span>
           {focusLabel}
         </p>
         {session ? (
-          <div className="practice-progress" aria-hidden="true">
-            <div
-              className="practice-progress__fill"
-              style={{ width: `${((session.currentIndex + 1) / exercises.length) * 100}%` }}
-            />
-          </div>
+          <progress
+            aria-hidden="true"
+            className="practice-progress"
+            max={exercises.length}
+            value={session.currentIndex + 1}
+          />
         ) : null}
       </header>
 
-      {isStarting ? <p className="status-text">Preparing your session...</p> : null}
+      {isStarting ? <p className="status-text type-body-muted">Preparing your session...</p> : null}
 
       {!isStarting && mistakes.length === 0 ? (
         <section className="surface-card">
-          <p className="empty-state">
+          <p className="empty-state type-body-muted">
             Import a few corrected examples first so the app has real patterns to practice.
           </p>
         </section>
@@ -305,30 +312,30 @@ export function PracticePage() {
       {session && currentExercise ? (
         <section className="practice-session-surface">
           <div className="practice-prompt">
-            <p className="eyebrow">Translate to natural Hebrew</p>
+            <p className="eyebrow type-label">Translate to natural Hebrew</p>
             {currentExercise.presentedText ? (
-              <p className="practice-prompt__text" dir="auto">
+              <p className={promptClassName} dir="auto">
                 {currentExercise.presentedText}
               </p>
             ) : (
-              <p className="practice-prompt__text" dir="auto">
+              <p className={promptClassName} dir="auto">
                 {currentExercise.prompt}
               </p>
             )}
           </div>
 
           <div className="practice-answer-section">
-            <label className="field-label practice-answer-section__label" htmlFor="practice-answer">
+            <label className="field-label type-label-field practice-answer-section__label" htmlFor="practice-answer">
               Type in Hebrew
             </label>
             {viewState === "revising" && attempt ? (
               <div className="practice-prior-attempt">
-                <p className="practice-prior-attempt__label">Prior attempt</p>
-                <p className="hebrew-text" dir="rtl">{attempt.userAnswer}</p>
+                <p className="practice-prior-attempt__label type-label-meta">Prior attempt</p>
+                <p className="hebrew-text type-hebrew-training" dir="rtl">{attempt.userAnswer}</p>
               </div>
             ) : null}
             <textarea
-              className="text-input text-input--multiline text-input--hebrew practice-answer"
+              className="text-input text-input--multiline text-input--hebrew practice-answer type-hebrew-training"
               dir="rtl"
               disabled={isLocked}
               id="practice-answer"
@@ -381,17 +388,17 @@ export function PracticePage() {
             ) : null}
           </div>
           {isEvaluating ? (
-            <p className="status-text status-text--active">Evaluating with LLM...</p>
+            <p className="status-text type-body-muted status-text--active">Evaluating with LLM...</p>
           ) : null}
 
           {attempt ? (
             <section className="practice-feedback">
               <div className="practice-feedback__verdict-row">
-                <p className="practice-feedback__verdict">{verdictLabel}</p>
+                <p className="practice-feedback__verdict type-heading-md">{verdictLabel}</p>
               </div>
               {showsBetterPhrasing ? (
                 <div>
-                  <p className="practice-feedback__label">Better phrasing</p>
+                  <p className="practice-feedback__label type-label">Better phrasing</p>
                   <HighlightedFeedback
                     correctedAnswer={attempt.result.correctedAnswer}
                     issues={attempt.result.issues}
@@ -399,13 +406,13 @@ export function PracticePage() {
                 </div>
               ) : null}
               <div>
-                <p className="practice-feedback__label">Main fix</p>
-                <p className="practice-feedback__copy">{mainFix}</p>
+                <p className="practice-feedback__label type-label">Main fix</p>
+                <p className="practice-feedback__copy type-body">{mainFix}</p>
               </div>
               {showsBetterPhrasing ? (
                 <div className="practice-comparison">
                   <div>
-                    <p className="practice-feedback__label">You wrote</p>
+                    <p className="practice-feedback__label type-label">You wrote</p>
                     <HighlightedAnswer
                       answer={attempt.userAnswer}
                       betterAnswer={attempt.result.correctedAnswer}
@@ -413,8 +420,8 @@ export function PracticePage() {
                     />
                   </div>
                   <div>
-                    <p className="practice-feedback__label">Better phrasing</p>
-                    <p className="hebrew-text hebrew-text--feedback" dir="rtl">
+                    <p className="practice-feedback__label type-label">Better phrasing</p>
+                    <p className="hebrew-text hebrew-text--feedback type-hebrew-training" dir="rtl">
                       {attempt.result.correctedAnswer}
                     </p>
                   </div>
@@ -424,13 +431,13 @@ export function PracticePage() {
                 <div className="practice-mistake-list">
                   {attempt.result.mistakeAnalyses.map((analysis, index) => (
                     <article className="practice-mistake-card" key={`${analysis.expectedFragment}-${index}`}>
-                      <p className="practice-feedback__label">Detected issue</p>
-                      <p className="practice-feedback__copy">
+                      <p className="practice-feedback__label type-label">Detected issue</p>
+                      <p className="practice-feedback__copy type-body">
                         <strong>{analysis.expectedFragment}</strong> instead of{" "}
                         <strong>{analysis.actualFragment}</strong>
                       </p>
-                      <p className="practice-feedback__copy">{analysis.shortExplanation}</p>
-                      <p className="practice-feedback__copy practice-feedback__copy--muted">
+                      <p className="practice-feedback__copy type-body">{analysis.shortExplanation}</p>
+                      <p className="practice-feedback__copy type-body-muted">
                         Added {analysis.practiceItems.length} future practice{" "}
                         {analysis.practiceItems.length === 1 ? "prompt" : "prompts"}.
                       </p>
@@ -442,15 +449,15 @@ export function PracticePage() {
                 <div className="teaching-panel teaching-panel--inline">
                   <div className="teaching-panel__details">
                     <div>
-                      <p className="teaching-panel__label">Why Hebrew prefers it</p>
-                      <p className="teaching-panel__copy" dir="auto">
+                      <p className="teaching-panel__label type-label">Why Hebrew prefers it</p>
+                      <p className="teaching-panel__copy type-body" dir="auto">
                         {attempt.result.teaching.whyPreferred ?? attempt.result.teaching.why}
                       </p>
                     </div>
                     {attempt.result.teaching.anotherExample ? (
                       <div>
-                        <p className="teaching-panel__label">Another example</p>
-                        <p className="hebrew-text hebrew-text--supporting teaching-panel__example">
+                        <p className="teaching-panel__label type-label">Another example</p>
+                        <p className="hebrew-text hebrew-text--supporting teaching-panel__example type-hebrew-training">
                           {attempt.result.teaching.anotherExample}
                         </p>
                       </div>
@@ -462,12 +469,12 @@ export function PracticePage() {
           ) : null}
 
           <footer className="practice-session-footer">
-            <p className="status-text">Completed {completedLabel}</p>
+            <p className="status-text type-body-muted">Completed {completedLabel}</p>
           </footer>
           {session.completedAt ? (
             <section className="surface-card">
-              <p className="eyebrow">Session complete</p>
-              <h3>Your mistake bank has been updated for the next review cycle.</h3>
+              <p className="eyebrow type-label">Session complete</p>
+              <h3 className="type-heading-md">Your mistake bank has been updated for the next review cycle.</h3>
             </section>
           ) : null}
         </section>

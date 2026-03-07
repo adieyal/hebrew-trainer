@@ -18,3 +18,7 @@ export function tokenizeHebrewText(value: string): string[] {
     .split(" ")
     .filter(Boolean);
 }
+
+export function containsHebrewScript(value: string): boolean {
+  return /[\u0590-\u05FF]/.test(value);
+}

@@ -32,7 +32,7 @@ export function SettingsPage() {
     }
 
     document.documentElement.style.setProperty(
-      "--font-hebrew",
+      "--font-hebrew-training",
       resolvePracticeFontStack(
         settings.typography.practiceFontPreset,
         settings.typography.customPracticeFont,
@@ -135,9 +135,9 @@ export function SettingsPage() {
   return (
     <section className="page page--grid">
       <div className="page__intro">
-        <p className="eyebrow">Settings</p>
-        <h2>Control persistence, exports, and optional LLM support</h2>
-        <p>
+        <p className="eyebrow type-label">Settings</p>
+        <h2 className="type-heading-lg">Control persistence, exports, and optional LLM support</h2>
+        <p className="type-body-muted">
           Everything stays local by default. If you enable an external model,
           the app makes that choice explicit and keeps the provider details in
           browser storage only.
@@ -149,8 +149,8 @@ export function SettingsPage() {
           <div className="surface-card">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Practice Defaults</p>
-                <h3>Session and grading behavior</h3>
+                <p className="eyebrow type-label">Practice Defaults</p>
+                <h3 className="type-heading-md">Session and grading behavior</h3>
               </div>
               <button className="button" onClick={() => void handleSave()} type="button">
                 Save settings
@@ -159,7 +159,7 @@ export function SettingsPage() {
 
             <div className="form-grid">
               <label className="field-block">
-                <span className="field-label">Default session length</span>
+                <span className="field-label type-label-field">Default session length</span>
                 <select
                   className="select-input"
                   onChange={(event) =>
@@ -177,7 +177,7 @@ export function SettingsPage() {
               </label>
 
               <label className="field-block">
-                <span className="field-label">Grading mode</span>
+                <span className="field-label type-label-field">Grading mode</span>
                 <select
                   className="select-input"
                   onChange={(event) =>
@@ -194,7 +194,7 @@ export function SettingsPage() {
               </label>
 
               <label className="field-block">
-                <span className="field-label">Grading strategy</span>
+                <span className="field-label type-label-field">Grading strategy</span>
                 <select
                   className="select-input"
                   onChange={(event) =>
@@ -217,11 +217,11 @@ export function SettingsPage() {
           </div>
 
           <div className="surface-card">
-            <p className="eyebrow">Typography</p>
-            <h3>Practice font options</h3>
+            <p className="eyebrow type-label">Typography</p>
+            <h3 className="type-heading-md">Practice font options</h3>
             <div className="form-grid">
               <label className="field-block">
-                <span className="field-label">Practice font</span>
+                <span className="field-label type-label-field">Practice font</span>
                 <select
                   className="select-input"
                   onChange={(event) => handleTypographyChange("practiceFontPreset", event)}
@@ -236,7 +236,7 @@ export function SettingsPage() {
               </label>
               {settings.typography.practiceFontPreset === "custom" ? (
                 <label className="field-block">
-                  <span className="field-label">Custom font stack</span>
+                  <span className="field-label type-label-field">Custom font stack</span>
                   <input
                     className="text-input"
                     onChange={(event) => handleTypographyChange("customPracticeFont", event)}
@@ -249,11 +249,11 @@ export function SettingsPage() {
           </div>
 
           <div className="surface-card">
-            <p className="eyebrow">LLM</p>
-            <h3>Optional external assistance</h3>
+            <p className="eyebrow type-label">LLM</p>
+            <h3 className="type-heading-md">Optional external assistance</h3>
             <div className="form-grid">
               <label className="field-block">
-                <span className="field-label">Mode</span>
+                <span className="field-label type-label-field">Mode</span>
                 <select
                   className="select-input"
                   onChange={(event) => handleLlmChange("mode", event)}
@@ -265,7 +265,7 @@ export function SettingsPage() {
                 </select>
               </label>
               <label className="field-block">
-                <span className="field-label">Base URL</span>
+                <span className="field-label type-label-field">Base URL</span>
                 <input
                   className="text-input"
                   list="openai-base-url-options"
@@ -279,7 +279,7 @@ export function SettingsPage() {
                 </datalist>
               </label>
               <label className="field-block">
-                <span className="field-label">Model</span>
+                <span className="field-label type-label-field">Model</span>
                 <input
                   className="text-input"
                   list="openai-model-options"
@@ -293,7 +293,7 @@ export function SettingsPage() {
                 </datalist>
               </label>
               <label className="field-block">
-                <span className="field-label">API key</span>
+                <span className="field-label type-label-field">API key</span>
                 <input
                   className="text-input"
                   onChange={(event) => handleLlmChange("apiKey", event)}
@@ -308,8 +308,8 @@ export function SettingsPage() {
           <div className="surface-card">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Backup</p>
-                <h3>Export or restore your local data</h3>
+                <p className="eyebrow type-label">Backup</p>
+                <h3 className="type-heading-md">Export or restore your local data</h3>
               </div>
               <div className="button-row">
                 <button
@@ -333,7 +333,7 @@ export function SettingsPage() {
               rows={14}
               value={importJson}
             />
-            <p className="status-text">{status}</p>
+            <p className="status-text type-body-muted">{status}</p>
           </div>
         </>
       )}

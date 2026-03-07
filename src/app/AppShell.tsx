@@ -18,15 +18,15 @@ export function AppShell() {
     <div className={isPracticeRoute ? "app-shell app-shell--practice" : "app-shell"}>
       {isPracticeRoute ? (
         <header className="app-shell__session-bar">
-          <p className="app-shell__mark">Personal Hebrew Mistake Trainer</p>
+          <p className="app-shell__mark type-label-meta">Personal Hebrew Mistake Trainer</p>
         </header>
       ) : (
         <header className="app-shell__header">
           <div>
-            <p className="eyebrow">Personal Hebrew Mistake Trainer</p>
-            <h1>Practice the Hebrew mistakes you actually make</h1>
+            <p className="eyebrow type-label">Personal Hebrew Mistake Trainer</p>
+            <h1 className="type-display-hero">Practice the Hebrew mistakes you actually make</h1>
           </div>
-          <p className="app-shell__lede">
+          <p className="app-shell__lede type-body-lede">
             A local-first writing desk for importing corrections, drilling weak
             patterns, and tracking relapse over time.
           </p>
@@ -34,7 +34,7 @@ export function AppShell() {
       )}
 
       <nav
-        className={isPracticeRoute ? "app-shell__nav app-shell__nav--practice" : "app-shell__nav"}
+        className="app-shell__nav app-shell__nav--practice"
         aria-label="Primary"
       >
         {navItems.map((item) => (
@@ -42,8 +42,8 @@ export function AppShell() {
             key={item.to}
             className={({ isActive }) =>
               isActive
-                ? `nav-link nav-link--active${isPracticeRoute ? " nav-link--practice-active" : ""}`
-                : `nav-link${isPracticeRoute ? " nav-link--practice" : ""}`
+                ? "nav-link nav-link--practice nav-link--active nav-link--practice-active"
+                : "nav-link nav-link--practice"
             }
             end={item.end}
             to={item.to}
