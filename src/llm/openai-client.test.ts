@@ -62,7 +62,7 @@ describe("createOpenAiCompatibleClient", () => {
     const client = createOpenAiCompatibleClient({
       apiKey: "secret",
       baseUrl: "https://api.openai.com/v1",
-      model: "gpt-5-mini",
+      model: "gpt-5-mini-cache-test",
     });
 
     await client.gradeAnswer({
@@ -79,9 +79,11 @@ describe("createOpenAiCompatibleClient", () => {
     const [, request] = fetchMock.mock.calls[0] ?? [];
     const body = JSON.parse(String(request?.body)) as {
       response_format?: { type: string; json_schema?: { name: string } };
+      temperature?: number;
     };
     expect(body.response_format?.type).toBe("json_schema");
     expect(body.response_format?.json_schema?.name).toBe("grade_answer");
+    expect(body.temperature).toBeUndefined();
   });
 
   test("parses mistake analyses with generated practice items from grading", async () => {
@@ -164,7 +166,7 @@ describe("createOpenAiCompatibleClient", () => {
     const client = createOpenAiCompatibleClient({
       apiKey: "secret",
       baseUrl: "https://api.openai.com/v1",
-      model: "gpt-5-mini",
+      model: "gpt-5-mini-cache-test",
     });
 
     const result = await client.gradeAnswer({
@@ -220,7 +222,7 @@ describe("createOpenAiCompatibleClient", () => {
     const client = createOpenAiCompatibleClient({
       apiKey: "secret",
       baseUrl: "https://api.openai.com/v1",
-      model: "gpt-5-mini",
+      model: "gpt-5-mini-fallback-test",
     });
 
     const result = await client.generateTranslationReference({
@@ -243,5 +245,83 @@ describe("createOpenAiCompatibleClient", () => {
 
     expect(firstBody.response_format?.type).toBe("json_schema");
     expect(secondBody.response_format).toBeUndefined();
+  });
+
+  test("remembers schema fallback for repeated requests with the same schema", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        text: async () => "response_format not supported",
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          choices: [
+            {
+              message: {
+                content: JSON.stringify({
+                  primaryTranslation: "אתה יכול להגיע לפני אחת?",
+                  acceptableTranslations: ["אתה יכול להגיע לפני אחת?"],
+                  focusTokens: ["להגיע", "אחת"],
+                  practiceRoots: ["להגיע", "אחת"],
+                  register: "casual",
+                  contexts: ["scheduling"],
+                  ruleNote: "Use the natural Hebrew phrasing.",
+                }),
+              },
+            },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          choices: [
+            {
+              message: {
+                content: JSON.stringify({
+                  primaryTranslation: "אתה יכול להגיע לפני אחת?",
+                  acceptableTranslations: ["אתה יכול להגיע לפני אחת?"],
+                  focusTokens: ["להגיע", "אחת"],
+                  practiceRoots: ["להגיע", "אחת"],
+                  register: "casual",
+                  contexts: ["scheduling"],
+                  ruleNote: "Use the natural Hebrew phrasing.",
+                }),
+              },
+            },
+          ],
+        }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const client = createOpenAiCompatibleClient({
+      apiKey: "secret",
+      baseUrl: "https://api.openai.com/v1",
+      model: "gpt-5-mini-cache-repeat-test",
+    });
+
+    await client.generateTranslationReference({
+      englishPrompt: "Can you get here before one?",
+      register: "casual",
+      contexts: ["scheduling"],
+    });
+
+    await client.generateTranslationReference({
+      englishPrompt: "Can you get here before one?",
+      register: "casual",
+      contexts: ["scheduling"],
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+
+    const [, thirdRequest] = fetchMock.mock.calls[2] ?? [];
+    const thirdBody = JSON.parse(String(thirdRequest?.body)) as {
+      response_format?: { type: string };
+    };
+
+    expect(thirdBody.response_format).toBeUndefined();
   });
 });

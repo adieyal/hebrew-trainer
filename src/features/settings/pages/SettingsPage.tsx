@@ -145,7 +145,7 @@ export function SettingsPage() {
       </div>
 
       {!settings ? null : (
-        <>
+        <form onSubmit={(event) => event.preventDefault()}>
           <div className="surface-card">
             <div className="section-heading">
               <div>
@@ -335,7 +335,7 @@ export function SettingsPage() {
             />
             <p className="status-text type-body-muted">{status}</p>
           </div>
-        </>
+        </form>
       )}
     </section>
   );

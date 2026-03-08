@@ -37,6 +37,14 @@ describe("SettingsPage", () => {
     expect(settings?.gradingStrategy).toBe("llm_led");
   });
 
+  test("renders the api key field inside a form", async () => {
+    render(<SettingsPage />);
+
+    const apiKeyField = await screen.findByLabelText(/api key/i);
+
+    expect(apiKeyField.closest("form")).not.toBeNull();
+  });
+
   test("saves the selected practice font preset", async () => {
     const user = userEvent.setup();
     render(<SettingsPage />);

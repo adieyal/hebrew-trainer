@@ -38,21 +38,7 @@ interface JsonRequestOptions {
   schema?: Record<string, unknown>;
 }
 
-function logSchemaModeFailure(
-  status: number,
-  message: string,
-  requestOptions: JsonRequestOptions,
-): void {
-  if (!requestOptions.schemaName) {
-    return;
-  }
-
-  console.warn("[openai-client] json_schema request failed", {
-    schemaName: requestOptions.schemaName,
-    status,
-    message,
-  });
-}
+const unsupportedSchemaModes = new Set<string>();
 
 const ATTEMPT_ISSUE_SCHEMA = {
   type: "object",
@@ -250,11 +236,26 @@ function shouldRetryWithoutSchema(status: number, message: string): boolean {
   return /response_format|json_schema|schema|unsupported/i.test(message);
 }
 
+function getSchemaCompatibilityKey(
+  options: OpenAiCompatibleClientOptions,
+  requestOptions: JsonRequestOptions,
+): string | null {
+  if (!requestOptions.schemaName) {
+    return null;
+  }
+
+  return `${options.baseUrl}::${options.model}::${requestOptions.schemaName}`;
+}
+
 async function postJson<TResponse>(
   options: OpenAiCompatibleClientOptions,
   prompt: string,
   requestOptions: JsonRequestOptions = {},
 ): Promise<TResponse> {
+  const schemaCompatibilityKey = getSchemaCompatibilityKey(options, requestOptions);
+  const schemaModeAvailable = schemaCompatibilityKey
+    ? !unsupportedSchemaModes.has(schemaCompatibilityKey)
+    : true;
   const buildBody = (useSchema: boolean) => ({
     model: options.model,
     messages: [
@@ -267,7 +268,6 @@ async function postJson<TResponse>(
         content: prompt,
       },
     ],
-    temperature: 0.2,
     ...(useSchema && requestOptions.schema && requestOptions.schemaName
       ? {
           response_format: {
@@ -292,17 +292,27 @@ async function postJson<TResponse>(
       body: JSON.stringify(buildBody(useSchema)),
     });
 
-  let response = await request(Boolean(requestOptions.schema));
+  let response = await request(Boolean(requestOptions.schema) && schemaModeAvailable);
 
   if (!response.ok) {
     const message = await response.text();
-    logSchemaModeFailure(response.status, message, requestOptions);
     if (
+      schemaModeAvailable &&
       requestOptions.schema &&
       shouldRetryWithoutSchema(response.status, message)
     ) {
       response = await request(false);
+      if (response.ok && schemaCompatibilityKey) {
+        unsupportedSchemaModes.add(schemaCompatibilityKey);
+      }
     } else {
+      if (schemaCompatibilityKey) {
+        console.warn("[openai-client] json_schema request failed", {
+          schemaName: requestOptions.schemaName,
+          status: response.status,
+          message,
+        });
+      }
       throw new Error(`LLM request failed with status ${response.status}`);
     }
   }
