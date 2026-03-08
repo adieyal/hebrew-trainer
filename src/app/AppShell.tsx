@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useMatch } from "react-router-dom";
 
 const navItems = [
   { to: "/", label: "Import", end: true },
@@ -11,8 +11,7 @@ const navItems = [
 ];
 
 export function AppShell() {
-  const location = useLocation();
-  const isPracticeRoute = location.pathname === "/practice";
+  const isPracticeRoute = useMatch("/practice") !== null;
 
   return (
     <div className={isPracticeRoute ? "app-shell app-shell--practice" : "app-shell"}>
