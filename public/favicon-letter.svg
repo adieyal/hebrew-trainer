@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 64 64"
+   role="img"
+   aria-labelledby="title"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="favicon-letter.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="5.6852103"
+     inkscape:cx="22.954296"
+     inkscape:cy="63.058353"
+     inkscape:window-width="1920"
+     inkscape:window-height="1131"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <title
+     id="title1">Hebrew Trainer favicon lettermark</title>
+  <rect
+     width="64"
+     height="64"
+     rx="14"
+     fill="#f6f0e1"
+     id="rect1" />
+  <path
+     d="m 12.671264,54.202389 v -8.552538 l 8.96306,-1.778928 -6.91045,-32.841746 10.194625,-1.2315656 5.063102,25.1102516 q 0.752623,3.557856 -0.478942,7.389393 2.32629,-0.547363 4.105218,-1.642087 1.847348,-1.163146 3.147334,-3.284175 1.299986,-2.121029 2.12103,-5.678885 0.821043,-3.626276 1.231565,-9.099901 L 40.92885,10.344974 H 51.328736 L 50.439272,22.93431 q -0.342102,5.199943 -1.368406,9.784103 -0.957884,4.51574 -3.215754,8.142016 -2.25787,3.626277 -6.363089,6.226248 -4.036798,2.531551 -10.468306,3.831537 z"
+     id="text1"
+     style="font-weight:700;font-size:68.4203px;font-family:'Noto Sans Hebrew', Assistant, sans-serif;direction:rtl;dominant-baseline:middle;text-anchor:middle;fill:#241b12;stroke-width:2.01236"
+     aria-label="ע" />
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Hebrew Trainer favicon lettermark</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
